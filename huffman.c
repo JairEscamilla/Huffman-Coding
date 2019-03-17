@@ -5,21 +5,25 @@
 // Definicion de las estructuras
 typedef struct defLista{
   char simbolo, codigo[100];
-  int probabilidad, status, lista;
+  int probabilidad, status, tipo;
   struct defLista* sig;
 }TipoLista;
 // Prototipos de funciones
 void menu();
 void creditos();
+void agregar(TipoLista**);
+void listar(TipoLista*);
 // Funcion principal
 int main() {
   int opcion;
+  TipoLista* Inicio = NULL;
   creditos();
   do {
     menu();
     scanf("%d", &opcion);
     switch (opcion) {
       case 1:
+        agregar(&Inicio);
         break;
       case 2:
         break;
@@ -67,7 +71,6 @@ void menu(){
   printf("\t10.- Salir\n");
   printf("\nDel anterior menu, selecciona la opcion deseada-> ");
 }
-
 void creditos(){
   system("clear");
   printf("\t\t\t Codificacion de Huffman\n");
@@ -78,4 +81,37 @@ void creditos(){
   printf("Objetivo: Codificar y decodificar mensajes usando la codificacion de Huffman.\n");
   printf("Presione una tecla para continuar...");
   getchar();
+}
+void agregar(TipoLista** Inicio){
+  char caracter;
+  int probabilidad;
+  TipoLista* Nuevo = (TipoLista*)malloc(sizeof(TipoLista));
+  TipoLista* temp;
+  system("clear");
+  printf("Ingresar un caracter: ");
+  __fpurge(stdin);
+  caracter = getchar();
+  printf("Ingresar la probabilidad de aparicion: ");
+  scanf("%d", &probabilidad);
+  Nuevo->simbolo = caracter;
+  Nuevo->probabilidad = probabilidad;
+  Nuevo->status = 0;
+  Nuevo->tipo = 0;
+  Nuevo->sig = NULL;
+  if(*Inicio == NULL){
+    *Inicio = Nuevo;
+  }else{
+    temp = *Inicio;
+    while(temp->sig != NULL){
+      temp = temp->sig;
+    }
+    temp->sig = Nuevo;
+  }
+}
+void listar(TipoLista* Inicio){
+  TipoLista* temp = Inicio;
+  while (temp != NULL) {
+    printf("");
+    temp = temp->sig;
+  }
 }
