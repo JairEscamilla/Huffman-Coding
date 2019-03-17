@@ -17,6 +17,7 @@ void borrar(TipoLista**);
 void modificarSimbolo(TipoLista*);
 void guardarenArchivo(TipoLista*);
 void leerdeArchivo(TipoLista**);
+int validaGeneracion(TipoLista*);
 // Funcion principal
 int main() {
   int opcion;
@@ -45,6 +46,11 @@ int main() {
         leerdeArchivo(&Inicio);
         break;
       case 7:
+        if(validaGeneracion(Inicio) == 0)
+          printf("No se pueden generar los codigos, ya que la suma de probabilidades no es igual a 100%%\n");
+        else{
+          printf("Generando codigos...\n");
+        }
         break;
       case 8:
         break;
@@ -227,5 +233,19 @@ void leerdeArchivo(TipoLista** Inicio){
     }
     fclose(Archivo);
     printf("Se ha leido correctamente la lista del archivo\n");
+  }
+}
+int validaGeneracion(TipoLista* Inicio){
+  system("clear");
+  TipoLista* temp = Inicio;
+  int sum = 0;
+  while (temp != NULL) {
+    sum += temp->probabilidad;
+    temp = temp->sig;
+  }
+  if (sum != 100) {
+    return 0;
+  }else{
+    return 1;
   }
 }
