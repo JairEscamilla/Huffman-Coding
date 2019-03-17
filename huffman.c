@@ -10,9 +10,11 @@ typedef struct defLista{
 }TipoLista;
 // Prototipos de funciones
 void menu();
+void creditos();
 // Funcion principal
 int main() {
   int opcion;
+  creditos();
   do {
     menu();
     scanf("%d", &opcion);
@@ -64,4 +66,16 @@ void menu(){
   printf("\t9.- Decodificar mensaje\n");
   printf("\t10.- Salir\n");
   printf("\nDel anterior menu, selecciona la opcion deseada-> ");
+}
+
+void creditos(){
+  system("clear");
+  printf("\t\t\t Codificacion de Huffman\n");
+  printf("Desarrollado por:\n\tCesar Mauricio Arellano Velasquez\n\tRaul Gonzalez Portillo\n\tAllan Jair Escamilla Hernandez\n\n");
+  printf("Presione una tecla para continuar...");
+  getchar();
+  system("clear");
+  printf("Objetivo: Codificar y decodificar mensajes usando la codificacion de Huffman.\n");
+  printf("Presione una tecla para continuar...");
+  getchar();
 }
