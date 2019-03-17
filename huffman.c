@@ -12,12 +12,46 @@ typedef struct defLista{
 void menu();
 // Funcion principal
 int main() {
-  menu();
+  int opcion;
+  do {
+    menu();
+    scanf("%d", &opcion);
+    switch (opcion) {
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        break;
+      case 7:
+        break;
+      case 8:
+        break;
+      case 9:
+        break;
+      case 10:
+        printf("Saliendo del programa...\n");
+        exit(0);
+        break;
+      default:
+        printf("Ingresa una opcion valida!\n");
+    }
+    printf("Presiona enter para continuar...");
+    __fpurge(stdin);
+    getchar();
+  } while(opcion != 10);
   return 0;
 }
 
 // Desarrollando las funciones
 void menu(){
+  system("clear");
   printf("\t\t\t Codificacion de Huffman\n");
   printf("\t1.- Introducir simbolo\n");
   printf("\t2.- Listar simbolos\n");
