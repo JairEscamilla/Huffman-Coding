@@ -16,6 +16,7 @@ void listar(TipoLista*);
 void borrar(TipoLista**);
 void modificarSimbolo(TipoLista*);
 void guardarenArchivo(TipoLista*);
+void leerdeArchivo(TipoLista**);
 // Funcion principal
 int main() {
   int opcion;
@@ -41,6 +42,7 @@ int main() {
         guardarenArchivo(Inicio);
         break;
       case 6:
+        leerdeArchivo(&Inicio);
         break;
       case 7:
         break;
@@ -187,5 +189,43 @@ void guardarenArchivo(TipoLista* Inicio){
     }
     printf("Se ha guardado con exito\n");
     fclose(Archivo);
+  }
+}
+void leerdeArchivo(TipoLista** Inicio){
+  system("clear");
+  FILE* Archivo;
+  TipoLista* temp = *Inicio, *temp2;
+  char nombre[200], simbolo;
+  int probabilidad;
+  printf("Ingresar nombre del archivo a ser cargado: ");
+  __fpurge(stdin);
+  gets(nombre);
+  Archivo = fopen(nombre, "rb");
+  if (Archivo == NULL) {
+    printf("Ha ocurrdo un error al abrir el archivo\n");
+  }else{
+    while(*Inicio != NULL){
+      temp = (*Inicio)->sig;
+      free(*Inicio);
+      *Inicio = temp;
+    }
+    while (fscanf(Archivo, "%d/%c\n", &probabilidad, &simbolo) == 2) {
+      temp = (TipoLista*)malloc(sizeof(TipoLista));
+      temp->probabilidad = probabilidad;
+      temp->simbolo = simbolo;
+      temp->status = 0;
+      temp->tipo = 0;
+      temp->sig = NULL;
+      if(*Inicio == NULL){
+        *Inicio = temp;
+      }else{
+        temp2 = *Inicio;
+        while(temp2->sig != NULL)
+          temp2 = temp2->sig;
+        temp2->sig = temp;
+      }
+    }
+    fclose(Archivo);
+    printf("Se ha leido correctamente la lista del archivo\n");
   }
 }
