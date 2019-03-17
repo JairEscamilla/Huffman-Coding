@@ -26,6 +26,7 @@ int main() {
         agregar(&Inicio);
         break;
       case 2:
+        listar(Inicio);
         break;
       case 3:
         break;
@@ -109,9 +110,12 @@ void agregar(TipoLista** Inicio){
   }
 }
 void listar(TipoLista* Inicio){
+  system("clear");
+  printf("\t\t\t Codificacion de Huffman\n");
   TipoLista* temp = Inicio;
   while (temp != NULL) {
-    printf("");
+    printf("\tCaracter: %c. Probabilidad: %d.\n", temp->simbolo, temp->probabilidad);
     temp = temp->sig;
   }
+  printf("\nss");
 }
