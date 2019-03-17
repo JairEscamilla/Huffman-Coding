@@ -14,6 +14,7 @@ void creditos();
 void agregar(TipoLista**);
 void listar(TipoLista*);
 void borrar(TipoLista**);
+void modificarSimbolo(TipoLista*);
 // Funcion principal
 int main() {
   int opcion;
@@ -33,6 +34,7 @@ int main() {
         borrar(&Inicio);
         break;
       case 4:
+        modificarSimbolo(Inicio);
         break;
       case 5:
         break;
@@ -56,7 +58,7 @@ int main() {
     getchar();
   } while(opcion != 10);
   return 0;
-}   
+}
 
 // Desarrollando las funciones
 void menu(){
@@ -116,7 +118,7 @@ void listar(TipoLista* Inicio){
   printf("\t\t\t Codificacion de Huffman\n");
   TipoLista* temp = Inicio;
   while (temp != NULL) {
-    printf("\tCaracter: %c. Probabilidad: %d.\n", temp->simbolo, temp->probabilidad);
+    printf("\tSimbolo: %c. Probabilidad: %d.\n", temp->simbolo, temp->probabilidad);
     temp = temp->sig;
   }
   printf("\n");
@@ -139,5 +141,29 @@ void borrar(TipoLista** Inicio){
       *Inicio = aux->sig;
     }
     free(aux);
+  }
+}
+void modificarSimbolo(TipoLista* Inicio){
+  system("clear");
+  char simbolo;
+  int flag = 0, probabilidad;
+  TipoLista* temp = Inicio, *temp2;
+  printf("Ingresar el simbolo a modificar: ");
+  __fpurge(stdin);
+  simbolo = getchar();
+  while(temp != NULL && flag == 0){
+    if(temp->simbolo == simbolo){
+      flag = 1;
+      temp2 = temp;
+    }
+    temp = temp->sig;
+  }
+  if(flag == 0)
+    printf("No se puede modificar el simbolo introdicido, ya que no se encuentra en la lista\n");
+  else{
+    printf("Ingresa la nueva probabilidad de aparicion del simbolo: ");
+    scanf("%d", &probabilidad);
+    temp2->probabilidad = probabilidad;
+    printf("Se ha modificado correctamente\n");
   }
 }
