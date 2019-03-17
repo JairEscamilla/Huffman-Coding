@@ -15,6 +15,7 @@ void agregar(TipoLista**);
 void listar(TipoLista*);
 void borrar(TipoLista**);
 void modificarSimbolo(TipoLista*);
+void guardarenArchivo(TipoLista*);
 // Funcion principal
 int main() {
   int opcion;
@@ -37,6 +38,7 @@ int main() {
         modificarSimbolo(Inicio);
         break;
       case 5:
+        guardarenArchivo(Inicio);
         break;
       case 6:
         break;
@@ -165,5 +167,25 @@ void modificarSimbolo(TipoLista* Inicio){
     scanf("%d", &probabilidad);
     temp2->probabilidad = probabilidad;
     printf("Se ha modificado correctamente\n");
+  }
+}
+void guardarenArchivo(TipoLista* Inicio){
+  system("clear");
+  TipoLista* temp = Inicio;
+  FILE* Archivo;
+  char nombreArchivo[200];
+  if(temp == NULL)
+    printf("La lista de simbolos se encuentra vacia, no puedes guardarla en un archivo\n");
+  else{
+    printf("Ingresar el nombre del archivo donde se desea guardar: ");
+    __fpurge(stdin);
+    gets(nombreArchivo);
+    Archivo = fopen(nombreArchivo, "wt");
+    while (temp != NULL) {
+      fprintf(Archivo, "%d/%c\n", temp->probabilidad, temp->simbolo);
+      temp = temp->sig;
+    }
+    printf("Se ha guardado con exito\n");
+    fclose(Archivo);
   }
 }
