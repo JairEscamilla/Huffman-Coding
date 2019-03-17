@@ -13,6 +13,7 @@ void menu();
 void creditos();
 void agregar(TipoLista**);
 void listar(TipoLista*);
+void borrar(TipoLista**);
 // Funcion principal
 int main() {
   int opcion;
@@ -29,6 +30,7 @@ int main() {
         listar(Inicio);
         break;
       case 3:
+        borrar(&Inicio);
         break;
       case 4:
         break;
@@ -54,7 +56,7 @@ int main() {
     getchar();
   } while(opcion != 10);
   return 0;
-}
+}   
 
 // Desarrollando las funciones
 void menu(){
@@ -117,5 +119,25 @@ void listar(TipoLista* Inicio){
     printf("\tCaracter: %c. Probabilidad: %d.\n", temp->simbolo, temp->probabilidad);
     temp = temp->sig;
   }
-  printf("\nss");
+  printf("\n");
+}
+void borrar(TipoLista** Inicio){
+  system("clear");
+  char simbolo;
+  TipoLista* aux = *Inicio, *ant = NULL;
+  printf("Ingresar el simbolo a borrar: ");
+  __fpurge(stdin);
+  simbolo = getchar();
+  while ((aux != NULL) && (aux->simbolo != simbolo)) {
+    ant = aux;
+    aux = aux->sig;
+  }
+  if (aux!=NULL) {
+    if (ant!=NULL) {
+      ant->sig = aux->sig;
+    }else{
+      *Inicio = aux->sig;
+    }
+    free(aux);
+  }
 }
