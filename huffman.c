@@ -292,7 +292,10 @@ void generarArbol(TipoLista* Inicio, TipoLista** Raiz){
   TipoLista* temp2;
   while(suma != 100){
     temp = Inicio;
+    while(temp != NULL && temp->status != 0)
+      temp = temp->sig;
     men = temp;
+    temp = Inicio;
     while(temp != NULL){
       if((temp->probabilidad < men->probabilidad) && (temp->status == 0)){
         men = temp;
@@ -301,7 +304,10 @@ void generarArbol(TipoLista* Inicio, TipoLista** Raiz){
     }
     men->status = 1;
     temp = Inicio;
+    while(temp != NULL && temp->status != 0)
+      temp = temp->sig;
     men2 = temp;
+    temp = Inicio;
     while(temp != NULL){
       if((temp->probabilidad < men2->probabilidad) && temp->status == 0){
         men2 = temp;
