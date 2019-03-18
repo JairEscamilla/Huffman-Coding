@@ -28,12 +28,14 @@ void generarArbol(TipoLista*, TipoLista**);
 void generarCodigos(TipoLista*, char[], int);
 void imprime(TipoLista* p);
 void codificar(TipoLista*);
+void decodificar(TipoLista*, char[]);
 // Funcion principal
 int main() {
-  int opcion;
+  int opcion, i = 0;
   TipoLista* Inicio = NULL, *temp;
   TipoLista* Raiz = NULL;
-  char codigo[200];
+  char codigo[200], linea[200], nombre[200];
+  FILE* Archivo;
   creditos();
   do {
     menu();
@@ -71,6 +73,18 @@ int main() {
         codificar(Inicio);
         break;
       case 9:
+        printf("Ingresar archivo a decodificar: ");
+        gets(nombre);
+        Archivo = fopen(nombre, "rb");
+        if (Archivo == NULL)
+          printf("No se ha encontrado el archivo\n");
+        else{
+          fgets(linea, 200, Archivo);
+          while (linea[i] != '\0') {
+            decodificar(Raiz, linea);
+          }
+          fclose(Archivo);
+        }
         break;
       case 10:
         printf("Saliendo del programa...\n");
@@ -373,4 +387,7 @@ void codificar(TipoLista* Inicio){
     fclose(Archivo2);
     fclose(Archivo);
   }
+}
+void decodificar(TipoLista* Raiz, char linea[]){
+
 }
