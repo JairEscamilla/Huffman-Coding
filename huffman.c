@@ -6,8 +6,13 @@
 typedef struct defLista{
   char simbolo, codigo[100];
   int probabilidad, status, tipo;
-  struct defLista* sig;
+  struct defLista* sig, *izq, *der;
 }TipoLista;
+typedef struct defArbol{
+  char simbolo;
+  int probabilidad, status, tipo;
+  struct defArbol *izq, *der;
+}TipoArbol;
 // Prototipos de funciones
 void menu();
 void creditos();
@@ -18,10 +23,12 @@ void modificarSimbolo(TipoLista*);
 void guardarenArchivo(TipoLista*);
 void leerdeArchivo(TipoLista**);
 int validaGeneracion(TipoLista*);
+void generarArbol(TipoLista*, TipoLista**);
 // Funcion principal
 int main() {
   int opcion;
   TipoLista* Inicio = NULL;
+  TipoLista* Raiz = NULL;
   creditos();
   do {
     menu();
@@ -49,7 +56,7 @@ int main() {
         if(validaGeneracion(Inicio) == 0)
           printf("No se pueden generar los codigos, ya que la suma de probabilidades no es igual a 100%%\n");
         else{
-          printf("Generando codigos...\n");
+          generarArbol(Inicio, &Raiz);
         }
         break;
       case 8:
@@ -247,5 +254,44 @@ int validaGeneracion(TipoLista* Inicio){
     return 0;
   }else{
     return 1;
+  }
+}
+void generarArbol(TipoLista* Inicio, TipoLista** Raiz){
+  int suma = 0;
+  TipoLista* temp = Inicio;
+  TipoLista* men = temp, *men2 = temp;
+  TipoLista* temp2;
+  while(suma != 100){
+    temp = Inicio;
+    men = temp;
+    while(temp != NULL){
+      if((temp->probabilidad < men->probabilidad) && (temp->status == 0)){
+        men = temp;
+      }
+      temp = temp->sig;
+    }
+    men->status = 1;
+    temp = Inicio;
+    men2 = temp;
+    while(temp != NULL){
+      if((temp->probabilidad < men2->probabilidad) && temp->status == 0){
+        men2 = temp;
+      }
+      temp = temp ->sig;
+    }
+    men2->status = 1;
+    temp2 = (TipoLista*)malloc(sizeof(TipoLista));
+    temp2->probabilidad = (men->probabilidad) + (men2->probabilidad);
+    temp2->izq = men;
+    temp2->der = men2;
+    temp2->sig = NULL;
+    temp2->status = 0;
+    temp2->tipo = 1;
+    *Raiz = temp2;
+    temp = Inicio;
+    while(temp->sig != NULL)
+      temp = temp->sig;
+    temp->sig = temp2;
+    suma = temp2->probabilidad;
   }
 }
