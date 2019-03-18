@@ -9,11 +9,6 @@ typedef struct defLista{
   int probabilidad, status, tipo;
   struct defLista* sig, *izq, *der;
 }TipoLista;
-typedef struct defArbol{
-  char simbolo;
-  int probabilidad, status, tipo;
-  struct defArbol *izq, *der;
-}TipoArbol;
 // Prototipos de funciones
 void menu();
 void creditos();
@@ -71,8 +66,10 @@ int main() {
         break;
       case 8:
         codificar(Inicio);
+        printf("Se ha codificado con exito\n");
         break;
       case 9:
+        system("clear");
         printf("Ingresar archivo a decodificar: ");
         __fpurge(stdin);
         gets(nombre);
@@ -85,9 +82,10 @@ int main() {
           gets(nombre);
           Archivo2 = fopen(nombre, "wt");
           decodificar(Raiz, linea, decodificado, Raiz);
-          //puts(decodificado);
+          fprintf(Archivo2, "%s", decodificado);
           fclose(Archivo2);
           fclose(Archivo);
+          printf("Se ha decodificado con exito el archivo\n");
         }
         break;
       case 10:
@@ -402,14 +400,16 @@ void decodificar(TipoLista* Raiz, char linea[], char decodificado[], TipoLista* 
         decodificar(Raiz->der, linea+1, decodificado, Raiz2);
       }
       if(Raiz->tipo == 0){
-        printf("%c\n", Raiz->simbolo);
+        *decodificado = Raiz->simbolo;
+        *(decodificado + 1) = '\0';
         Raiz = Raiz2;
         decodificar(Raiz, linea, decodificado+1, Raiz2);
       }
     }
     if(*linea == '\0'){
       if(Raiz->tipo == 0){
-        printf("%c\n", Raiz->simbolo);
+        *decodificado = Raiz->simbolo;
+        *(decodificado + 1) = '\0';
         Raiz = Raiz2;
         decodificar(Raiz, linea, decodificado+1, Raiz2);
       }
