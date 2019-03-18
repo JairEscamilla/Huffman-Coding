@@ -1,6 +1,7 @@
 // Incluimos las librerias
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Definicion de las estructuras
 typedef struct defLista{
@@ -24,11 +25,14 @@ void guardarenArchivo(TipoLista*);
 void leerdeArchivo(TipoLista**);
 int validaGeneracion(TipoLista*);
 void generarArbol(TipoLista*, TipoLista**);
+void generarCodigos(TipoLista*, char[], int);
+void imprime(TipoLista* p);
 // Funcion principal
 int main() {
   int opcion;
-  TipoLista* Inicio = NULL;
+  TipoLista* Inicio = NULL, *temp;
   TipoLista* Raiz = NULL;
+  char codigo[200];
   creditos();
   do {
     menu();
@@ -57,7 +61,11 @@ int main() {
           printf("No se pueden generar los codigos, ya que la suma de probabilidades no es igual a 100%%\n");
         else{
           generarArbol(Inicio, &Raiz);
+          generarCodigos(Raiz, codigo, 0);
+          printf("Codigos generados con exito: \n");
+          imprime(Raiz);
         }
+
         break;
       case 8:
         break;
@@ -120,6 +128,8 @@ void agregar(TipoLista** Inicio){
   Nuevo->status = 0;
   Nuevo->tipo = 0;
   Nuevo->sig = NULL;
+  Nuevo->izq = NULL;
+  Nuevo->der = NULL;
   if(*Inicio == NULL){
     *Inicio = Nuevo;
   }else{
@@ -229,6 +239,8 @@ void leerdeArchivo(TipoLista** Inicio){
       temp->status = 0;
       temp->tipo = 0;
       temp->sig = NULL;
+      temp->izq = NULL;
+      temp->der = NULL;
       if(*Inicio == NULL){
         *Inicio = temp;
       }else{
@@ -293,5 +305,30 @@ void generarArbol(TipoLista* Inicio, TipoLista** Raiz){
       temp = temp->sig;
     temp->sig = temp2;
     suma = temp2->probabilidad;
+  }
+}
+void generarCodigos(TipoLista* Raiz, char codigo[], int pos){
+    if(Raiz != NULL){
+      if(Raiz->izq != NULL){
+        codigo[pos] = '0';
+        codigo[pos+1] = '\0';
+        generarCodigos(Raiz->izq, codigo, pos+1);
+      }
+      if(Raiz->der != NULL){
+        codigo[pos] = '1';
+        codigo[pos+1] = '\0';
+        generarCodigos(Raiz->der, codigo, pos+1);
+      }
+      if(Raiz->tipo == 0){
+        strcpy(Raiz->codigo, codigo);
+      }
+    }
+}
+void imprime(TipoLista* p){
+  if(p != NULL){
+    imprime(p->izq);
+    if(p->tipo == 0)
+      printf("\t%c-> %s\n", p->simbolo, p->codigo);
+    imprime(p->der);
   }
 }
