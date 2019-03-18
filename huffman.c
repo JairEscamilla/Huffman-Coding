@@ -28,14 +28,14 @@ void generarArbol(TipoLista*, TipoLista**);
 void generarCodigos(TipoLista*, char[], int);
 void imprime(TipoLista* p);
 void codificar(TipoLista*);
-void decodificar(TipoLista*, char[]);
+void decodificar(TipoLista*, char[], char[], TipoLista*);
 // Funcion principal
 int main() {
   int opcion, i = 0;
   TipoLista* Inicio = NULL, *temp;
   TipoLista* Raiz = NULL;
-  char codigo[200], linea[200], nombre[200];
-  FILE* Archivo;
+  char codigo[200], linea[200], nombre[200], decodificado[200];
+  FILE* Archivo, *Archivo2;
   creditos();
   do {
     menu();
@@ -74,15 +74,19 @@ int main() {
         break;
       case 9:
         printf("Ingresar archivo a decodificar: ");
+        __fpurge(stdin);
         gets(nombre);
         Archivo = fopen(nombre, "rb");
         if (Archivo == NULL)
           printf("No se ha encontrado el archivo\n");
         else{
           fgets(linea, 200, Archivo);
-          while (linea[i] != '\0') {
-            decodificar(Raiz, linea);
-          }
+          printf("Ingresar nombre del archivo donde se decodificara el texto: ");
+          gets(nombre);
+          Archivo2 = fopen(nombre, "wt");
+          decodificar(Raiz, linea, decodificado, Raiz);
+          //puts(decodificado);
+          fclose(Archivo2);
           fclose(Archivo);
         }
         break;
@@ -388,6 +392,26 @@ void codificar(TipoLista* Inicio){
     fclose(Archivo);
   }
 }
-void decodificar(TipoLista* Raiz, char linea[]){
+void decodificar(TipoLista* Raiz, char linea[], char decodificado[], TipoLista* Raiz2){
+    if (*linea != '\0') {
+      if(Raiz->izq != NULL && (*linea) == '0'){
+        decodificar(Raiz->izq, linea+1, decodificado, Raiz2);
+      }
 
+      if(Raiz->der != NULL && (*linea) == '1'){
+        decodificar(Raiz->der, linea+1, decodificado, Raiz2);
+      }
+      if(Raiz->tipo == 0){
+        printf("%c\n", Raiz->simbolo);
+        Raiz = Raiz2;
+        decodificar(Raiz, linea, decodificado+1, Raiz2);
+      }
+    }
+    if(*linea == '\0'){
+      if(Raiz->tipo == 0){
+        printf("%c\n", Raiz->simbolo);
+        Raiz = Raiz2;
+        decodificar(Raiz, linea, decodificado+1, Raiz2);
+      }
+    }
 }
