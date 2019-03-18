@@ -27,6 +27,7 @@ int validaGeneracion(TipoLista*);
 void generarArbol(TipoLista*, TipoLista**);
 void generarCodigos(TipoLista*, char[], int);
 void imprime(TipoLista* p);
+void codificar(TipoLista*);
 // Funcion principal
 int main() {
   int opcion;
@@ -65,9 +66,9 @@ int main() {
           printf("Codigos generados con exito: \n");
           imprime(Raiz);
         }
-
         break;
       case 8:
+        codificar(Inicio);
         break;
       case 9:
         break;
@@ -330,5 +331,46 @@ void imprime(TipoLista* p){
     if(p->tipo == 0)
       printf("\t%c-> %s\n", p->simbolo, p->codigo);
     imprime(p->der);
+  }
+}
+void codificar(TipoLista* Inicio){
+  system("clear");
+  TipoLista* temp = Inicio;
+  char nombre[200], linea[200], nombre2[200];
+  int i = 0, flag = 0;
+  FILE* Archivo, *Archivo2;
+  printf("Ingresar el nombre del archivo donde se encuentra el texto a codificar: ");
+  __fpurge(stdin);
+  gets(nombre);
+  Archivo = fopen(nombre, "rb");
+  if (Archivo == NULL) {
+    printf("No se ha encontrado el archivo.\n");
+  }else{
+    printf("Ingresar archivo donde se guardara el texto codificado: ");
+    gets(nombre2);
+    Archivo2 = fopen(nombre2, "wt");
+    while (fgets(linea, 200, Archivo) != NULL && flag == 0) {
+      linea[strlen(linea)-1] = '\0';
+      while(linea[i] != '\0'){
+        temp = Inicio;
+        flag = 0;
+        while (temp != NULL && flag == 0) {
+          if(linea[i] == temp->simbolo){
+            fprintf(Archivo2, "%s", temp->codigo);
+            flag = 1;
+          }
+          temp = temp->sig;
+        }
+        if(flag == 0){
+          printf("No se ha completado la codificacion, ya que hacen falta simbolos\n");
+          linea[i] = '\0';
+          flag = 1;
+        }else{
+          i++;
+        }
+      }
+    }
+    fclose(Archivo2);
+    fclose(Archivo);
   }
 }
