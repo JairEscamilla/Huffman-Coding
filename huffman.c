@@ -26,7 +26,7 @@ void codificar(TipoLista*);
 void decodificar(TipoLista*, char[], char[], TipoLista*);
 // Funcion principal
 int main() {
-  int opcion, i = 0;
+  int opcion, i = 0, flag = 0, generado = 0;
   TipoLista* Inicio = NULL, *temp;
   TipoLista* Raiz = NULL;
   char codigo[200], linea[200], nombre[200], decodificado[200];
@@ -44,9 +44,13 @@ int main() {
         break;
       case 3:
         borrar(&Inicio);
+        if(generado == 1)
+          flag == 1;
         break;
       case 4:
         modificarSimbolo(Inicio);
+        if(generado == 1)
+          flag == 1;
         break;
       case 5:
         guardarenArchivo(Inicio);
@@ -62,30 +66,49 @@ int main() {
           generarCodigos(Raiz, codigo, 0);
           printf("Codigos generados con exito: \n");
           imprime(Raiz);
+          generado = 1;
+          flag = 0;
         }
         break;
       case 8:
-        codificar(Inicio);
-        printf("Se ha codificado con exito\n");
+        system("clear");
+        if(flag == 1)
+          printf("Debes generar los codigos\n");
+        else{
+          if(generado == 1){
+            codificar(Inicio);
+            printf("Se ha codificado con exito\n");
+          }else{
+            printf("Aun no se han generado los codigos\n");
+          }
+        }
         break;
       case 9:
         system("clear");
-        printf("Ingresar archivo a decodificar: ");
-        __fpurge(stdin);
-        gets(nombre);
-        Archivo = fopen(nombre, "rb");
-        if (Archivo == NULL)
-          printf("No se ha encontrado el archivo\n");
+        if(flag == 1)
+          printf("Debes generar los codigos\n");
         else{
-          fgets(linea, 200, Archivo);
-          printf("Ingresar nombre del archivo donde se decodificara el texto: ");
-          gets(nombre);
-          Archivo2 = fopen(nombre, "wt");
-          decodificar(Raiz, linea, decodificado, Raiz);
-          fprintf(Archivo2, "%s", decodificado);
-          fclose(Archivo2);
-          fclose(Archivo);
-          printf("Se ha decodificado con exito el archivo\n");
+          if(generado == 1){
+            printf("Ingresar archivo a decodificar: ");
+            __fpurge(stdin);
+            gets(nombre);
+            Archivo = fopen(nombre, "rb");
+            if (Archivo == NULL)
+              printf("No se ha encontrado el archivo\n");
+            else{
+              fgets(linea, 200, Archivo);
+              printf("Ingresar nombre del archivo donde se decodificara el texto: ");
+              gets(nombre);
+              Archivo2 = fopen(nombre, "wt");
+              decodificar(Raiz, linea, decodificado, Raiz);
+              fprintf(Archivo2, "%s\n", decodificado);
+              fclose(Archivo2);
+              fclose(Archivo);
+              printf("Se ha decodificado con exito el archivo\n");
+            }
+          }else{
+            printf("Debes generar los codigos\n");
+          }
         }
         break;
       case 10:
@@ -402,7 +425,7 @@ void codificar(TipoLista* Inicio){
         flag = 0;
         while (temp != NULL && flag == 0) {
           if(linea[i] == temp->simbolo){
-            fprintf(Archivo2, "%s\n", temp->codigo);
+            fprintf(Archivo2, "%s", temp->codigo);
             flag = 1;
           }
           temp = temp->sig;
