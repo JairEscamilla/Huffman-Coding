@@ -162,7 +162,8 @@ void listar(TipoLista* Inicio){
   printf("\t\t\t Codificacion de Huffman\n");
   TipoLista* temp = Inicio;
   while (temp != NULL) {
-    printf("\tSimbolo: %c. Probabilidad: %d.\n", temp->simbolo, temp->probabilidad);
+    if(temp != NULL && temp->tipo == 0)
+      printf("\tSimbolo: %c. Probabilidad: %d.\n", temp->simbolo, temp->probabilidad);
     temp = temp->sig;
   }
   printf("\n");
@@ -170,10 +171,20 @@ void listar(TipoLista* Inicio){
 void borrar(TipoLista** Inicio){
   system("clear");
   char simbolo;
-  TipoLista* aux = *Inicio, *ant = NULL;
+  int flag = 0;
+  TipoLista* aux = *Inicio, *ant = NULL, *temp = *Inicio;
   printf("Ingresar el simbolo a borrar: ");
   __fpurge(stdin);
   simbolo = getchar();
+  while(temp != NULL){
+    if(temp->tipo == 0 && temp->simbolo == simbolo)
+      flag = 1;
+    temp = temp->sig;
+  }
+  if(flag == 0)
+    printf("No se encontro el simbolo\n");
+  else
+    printf("Simbolo eliminado\n");
   while ((aux != NULL) && (aux->simbolo != simbolo)) {
     ant = aux;
     aux = aux->sig;
@@ -378,7 +389,7 @@ void codificar(TipoLista* Inicio){
         flag = 0;
         while (temp != NULL && flag == 0) {
           if(linea[i] == temp->simbolo){
-            fprintf(Archivo2, "%s", temp->codigo);
+            fprintf(Archivo2, "%s\n", temp->codigo);
             flag = 1;
           }
           temp = temp->sig;
