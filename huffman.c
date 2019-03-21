@@ -131,30 +131,39 @@ void creditos(){
 }
 void agregar(TipoLista** Inicio){
   char caracter;
-  int probabilidad;
+  int probabilidad, flag = 0;
   TipoLista* Nuevo = (TipoLista*)malloc(sizeof(TipoLista));
-  TipoLista* temp;
+  TipoLista* temp, *temp2 = *Inicio;
   system("clear");
   printf("Ingresar un caracter: ");
   __fpurge(stdin);
   caracter = getchar();
-  printf("Ingresar la probabilidad de aparicion: ");
-  scanf("%d", &probabilidad);
-  Nuevo->simbolo = caracter;
-  Nuevo->probabilidad = probabilidad;
-  Nuevo->status = 0;
-  Nuevo->tipo = 0;
-  Nuevo->sig = NULL;
-  Nuevo->izq = NULL;
-  Nuevo->der = NULL;
-  if(*Inicio == NULL){
-    *Inicio = Nuevo;
-  }else{
-    temp = *Inicio;
-    while(temp->sig != NULL){
-      temp = temp->sig;
+  while(temp2 != NULL){
+    if(temp2->tipo == 0 && temp2->simbolo == caracter)
+      flag = 1;
+    temp2 = temp2->sig;
+  }
+  if(flag == 1)
+    printf("El simbolo ingresado ya existe en la lista, por lo que no puedes volver a agregarlo\n");
+  else{
+    printf("Ingresar la probabilidad de aparicion: ");
+    scanf("%d", &probabilidad);
+    Nuevo->simbolo = caracter;
+    Nuevo->probabilidad = probabilidad;
+    Nuevo->status = 0;
+    Nuevo->tipo = 0;
+    Nuevo->sig = NULL;
+    Nuevo->izq = NULL;
+    Nuevo->der = NULL;
+    if(*Inicio == NULL){
+      *Inicio = Nuevo;
+    }else{
+      temp = *Inicio;
+      while(temp->sig != NULL){
+        temp = temp->sig;
+      }
+      temp->sig = Nuevo;
     }
-    temp->sig = Nuevo;
   }
 }
 void listar(TipoLista* Inicio){
