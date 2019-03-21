@@ -60,6 +60,7 @@ int main() {
         break;
       case 6:
         leerdeArchivo(&Inicio);
+        generado = 0;
         break;
       case 7:
         if(validaGeneracion(Inicio) == 0){
@@ -87,6 +88,7 @@ int main() {
           }
         break;
       case 9:
+        flag2 = 0;
         system("clear");
           if(generado == 1){
             printf("Ingresar archivo a decodificar: ");
@@ -97,6 +99,7 @@ int main() {
               printf("No se ha encontrado el archivo\n");
             else{
               fgets(linea, 200, Archivo);
+
               if(flag2 == 0){
                 printf("Ingresar nombre del archivo donde se decodificara el texto: ");
                 gets(nombre);
