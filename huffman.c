@@ -243,12 +243,16 @@ void guardarenArchivo(TipoLista* Inicio){
     __fpurge(stdin);
     gets(nombreArchivo);
     Archivo = fopen(nombreArchivo, "wt");
-    while (temp != NULL) {
-      fprintf(Archivo, "%d/%c\n", temp->probabilidad, temp->simbolo);
-      temp = temp->sig;
+    if(Archivo == NULL)
+      printf("No se ha podido crear el archivo\n");
+    else{
+      while (temp != NULL) {
+        fprintf(Archivo, "%d/%c\n", temp->probabilidad, temp->simbolo);
+        temp = temp->sig;
+      }
+      printf("Se ha guardado con exito\n");
+      fclose(Archivo);
     }
-    printf("Se ha guardado con exito\n");
-    fclose(Archivo);
   }
 }
 void leerdeArchivo(TipoLista** Inicio){
