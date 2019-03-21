@@ -26,6 +26,7 @@ void codificar(TipoLista*);
 void decodificar(TipoLista*, char[], char[], TipoLista*);
 void validarDecodificacion(TipoLista*, int*, char[]);
 int validarCodificacion(TipoLista*, char[]);
+void quitarPorcentaje(TipoLista* Inicio);
 void liberarMemoria(TipoLista*);
 // Funcion principal
 int main() {
@@ -61,15 +62,20 @@ int main() {
         leerdeArchivo(&Inicio);
         break;
       case 7:
-        if(validaGeneracion(Inicio) == 0)
+        if(validaGeneracion(Inicio) == 0){
           printf("No se pueden generar los codigos, ya que la suma de probabilidades no es igual a 100%%\n");
+        }
         else{
-          generarArbol(Inicio, &Raiz);
-          generarCodigos(Raiz, codigo, 0);
-          printf("Codigos generados con exito: \n");
-          imprime(Raiz);
-          generado = 1;
-          flag = 0;
+          if(generado == 1)
+            printf("Ya se han generado los codigos\n");
+          else{
+            generarArbol(Inicio, &Raiz);
+            generarCodigos(Raiz, codigo, 0);
+            printf("Codigos generados con exito: \n");
+            imprime(Raiz);
+            generado = 1;
+            flag = 0;
+          }
         }
         break;
       case 8:
@@ -91,7 +97,6 @@ int main() {
               printf("No se ha encontrado el archivo\n");
             else{
               fgets(linea, 200, Archivo);
-              validarDecodificacion(Raiz, &flag2, linea);
               if(flag2 == 0){
                 printf("Ingresar nombre del archivo donde se decodificara el texto: ");
                 gets(nombre);
@@ -333,11 +338,12 @@ int validaGeneracion(TipoLista* Inicio){
   }else{
     return 1;
   }
+
 }
 void generarArbol(TipoLista* Inicio, TipoLista** Raiz){
   int suma = 0;
   TipoLista* temp = Inicio;
-  TipoLista* men = temp, *men2 = temp;
+  TipoLista* men = temp, *men2 = temp, *temp3 = Inicio;
   TipoLista* temp2;
   while(suma != 100){
     temp = Inicio;
@@ -496,18 +502,6 @@ int validarCodificacion(TipoLista* Inicio, char nombre[]){
   }
   fclose(Archivo);
   return error;
-}
-void validarDecodificacion(TipoLista* Raiz, int* flag, char linea[]){
-  if(*linea != '\0'){
-    if(Raiz == NULL || (Raiz->tipo == 1 && Raiz->izq == NULL && Raiz->der == NULL))
-      *flag = 1;
-    else{
-      if(*linea == '0')
-        validarDecodificacion(Raiz->izq, flag, linea+1);
-      if(*linea == '1')
-        validarDecodificacion(Raiz->der, flag, linea+1);
-    }
-  }
 }
 void liberarMemoria(TipoLista* Inicio){
   TipoLista* temp;
