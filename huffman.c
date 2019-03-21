@@ -24,11 +24,12 @@ void generarCodigos(TipoLista*, char[], int);
 void imprime(TipoLista* p);
 void codificar(TipoLista*);
 void decodificar(TipoLista*, char[], char[], TipoLista*);
+void validarDecodificacion(TipoLista*, int*, char[]);
 int validarCodificacion(TipoLista*, char[]);
 void liberarMemoria(TipoLista*);
 // Funcion principal
 int main() {
-  int opcion, i = 0, flag = 0, generado = 0;
+  int opcion, i = 0, flag = 0, generado = 0, flag2 = 0;
   TipoLista* Inicio = NULL, *temp;
   TipoLista* Raiz = NULL;
   char codigo[200], linea[200], nombre[200], decodificado[200];
@@ -90,14 +91,20 @@ int main() {
               printf("No se ha encontrado el archivo\n");
             else{
               fgets(linea, 200, Archivo);
-              printf("Ingresar nombre del archivo donde se decodificara el texto: ");
-              gets(nombre);
-              Archivo2 = fopen(nombre, "wt");
-              decodificar(Raiz, linea, decodificado, Raiz);
-              fprintf(Archivo2, "%s\n", decodificado);
-              fclose(Archivo2);
-              fclose(Archivo);
-              printf("Se ha decodificado con exito el archivo\n");
+              validarDecodificacion(Raiz, &flag2, linea);
+              if(flag2 == 0){
+                printf("Ingresar nombre del archivo donde se decodificara el texto: ");
+                gets(nombre);
+                Archivo2 = fopen(nombre, "wt");
+                decodificar(Raiz, linea, decodificado, Raiz);
+                fprintf(Archivo2, "%s\n", decodificado);
+                fclose(Archivo2);
+                fclose(Archivo);
+                printf("Se ha decodificado con exito el archivo\n");
+              }else{
+                printf("Algunos valores codificados no se encuentran en la lista\n");
+              }
+
             }
           }else{
             printf("Debes generar los codigos\n");
@@ -263,7 +270,8 @@ void guardarenArchivo(TipoLista* Inicio){
       printf("No se ha podido crear el archivo\n");
     else{
       while (temp != NULL) {
-        fprintf(Archivo, "%d/%c\n", temp->probabilidad, temp->simbolo);
+        if(temp->tipo == 0)
+          fprintf(Archivo, "%d/%c\n", temp->probabilidad, temp->simbolo);
         temp = temp->sig;
       }
       printf("Se ha guardado con exito\n");
@@ -488,6 +496,18 @@ int validarCodificacion(TipoLista* Inicio, char nombre[]){
   }
   fclose(Archivo);
   return error;
+}
+void validarDecodificacion(TipoLista* Raiz, int* flag, char linea[]){
+  if(*linea != '\0'){
+    if(Raiz == NULL || (Raiz->tipo == 1 && Raiz->izq == NULL && Raiz->der == NULL))
+      *flag = 1;
+    else{
+      if(*linea == '0')
+        validarDecodificacion(Raiz->izq, flag, linea+1);
+      if(*linea == '1')
+        validarDecodificacion(Raiz->der, flag, linea+1);
+    }
+  }
 }
 void liberarMemoria(TipoLista* Inicio){
   TipoLista* temp;
