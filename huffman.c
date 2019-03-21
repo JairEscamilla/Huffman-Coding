@@ -24,7 +24,8 @@ void generarCodigos(TipoLista*, char[], int);
 void imprime(TipoLista* p);
 void codificar(TipoLista*);
 void decodificar(TipoLista*, char[], char[], TipoLista*);
-int validarCodificacion(TipoLista* Inicio, char nombre[]);
+int validarCodificacion(TipoLista*, char[]);
+void liberarMemoria(TipoLista*);
 // Funcion principal
 int main() {
   int opcion, i = 0, flag = 0, generado = 0;
@@ -104,6 +105,7 @@ int main() {
         break;
       case 10:
         printf("Saliendo del programa...\n");
+        liberarMemoria(Inicio);
         exit(0);
         break;
       default:
@@ -486,4 +488,12 @@ int validarCodificacion(TipoLista* Inicio, char nombre[]){
   }
   fclose(Archivo);
   return error;
+}
+void liberarMemoria(TipoLista* Inicio){
+  TipoLista* temp;
+  while (Inicio != NULL) {
+    temp = Inicio;
+    Inicio = Inicio->sig;
+    free(temp);
+  }
 }
