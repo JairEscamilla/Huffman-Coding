@@ -38,19 +38,18 @@ int main() {
     switch (opcion) {
       case 1:
         agregar(&Inicio);
+        generado = 0;
         break;
       case 2:
         listar(Inicio);
         break;
       case 3:
         borrar(&Inicio);
-        if(generado == 1)
-          flag == 1;
+        generado = 0;
         break;
       case 4:
         modificarSimbolo(Inicio);
-        if(generado == 1)
-          flag == 1;
+        generado = 0;
         break;
       case 5:
         guardarenArchivo(Inicio);
@@ -72,22 +71,15 @@ int main() {
         break;
       case 8:
         system("clear");
-        if(flag == 1)
-          printf("Debes generar los codigos\n");
-        else{
           if(generado == 1){
             codificar(Inicio);
             printf("Se ha codificado con exito\n");
           }else{
             printf("Aun no se han generado los codigos\n");
           }
-        }
         break;
       case 9:
         system("clear");
-        if(flag == 1)
-          printf("Debes generar los codigos\n");
-        else{
           if(generado == 1){
             printf("Ingresar archivo a decodificar: ");
             __fpurge(stdin);
@@ -109,7 +101,6 @@ int main() {
           }else{
             printf("Debes generar los codigos\n");
           }
-        }
         break;
       case 10:
         printf("Saliendo del programa...\n");
@@ -323,7 +314,8 @@ int validaGeneracion(TipoLista* Inicio){
   TipoLista* temp = Inicio;
   int sum = 0;
   while (temp != NULL) {
-    sum += temp->probabilidad;
+    if(temp != NULL && temp->tipo == 0)
+      sum += temp->probabilidad;
     temp = temp->sig;
   }
   if (sum != 100) {
