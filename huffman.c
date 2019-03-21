@@ -24,6 +24,7 @@ void generarCodigos(TipoLista*, char[], int);
 void imprime(TipoLista* p);
 void codificar(TipoLista*);
 void decodificar(TipoLista*, char[], char[], TipoLista*);
+int validarCodificacion(TipoLista* Inicio, char nombre[]);
 // Funcion principal
 int main() {
   int opcion, i = 0, flag = 0, generado = 0;
@@ -73,7 +74,6 @@ int main() {
         system("clear");
           if(generado == 1){
             codificar(Inicio);
-            printf("Se ha codificado con exito\n");
           }else{
             printf("Aun no se han generado los codigos\n");
           }
@@ -407,32 +407,36 @@ void codificar(TipoLista* Inicio){
   if (Archivo == NULL) {
     printf("No se ha encontrado el archivo.\n");
   }else{
-    printf("Ingresar archivo donde se guardara el texto codificado: ");
-    gets(nombre2);
-    Archivo2 = fopen(nombre2, "wt");
-    while (fgets(linea, 200, Archivo) != NULL && flag == 0) {
-      linea[strlen(linea)-1] = '\0';
-      while(linea[i] != '\0'){
-        temp = Inicio;
-        flag = 0;
-        while (temp != NULL && flag == 0) {
-          if(linea[i] == temp->simbolo){
-            fprintf(Archivo2, "%s", temp->codigo);
-            flag = 1;
+    if(validarCodificacion(Inicio, nombre) == 0){
+      printf("Ingresar archivo donde se guardara el texto codificado: ");
+      gets(nombre2);
+      Archivo2 = fopen(nombre2, "wt");
+      while (fgets(linea, 200, Archivo) != NULL && flag == 0) {
+        linea[strlen(linea)-1] = '\0';
+        while(linea[i] != '\0'){
+          temp = Inicio;
+          flag = 0;
+          while (temp != NULL && flag == 0) {
+            if(linea[i] == temp->simbolo){
+              fprintf(Archivo2, "%s", temp->codigo);
+              flag = 1;
+            }
+            temp = temp->sig;
           }
-          temp = temp->sig;
-        }
-        if(flag == 0){
-          printf("No se ha completado la codificacion, ya que hacen falta simbolos\n");
-          linea[i] = '\0';
-          flag = 1;
-        }else{
-          i++;
+          if(flag == 0){
+            printf("No se ha completado la codificacion, ya que hacen falta simbolos\n");
+            linea[i] = '\0';
+            flag = 1;
+          }else{
+            i++;
+          }
         }
       }
-    }
-    fclose(Archivo2);
-    fclose(Archivo);
+      fclose(Archivo2);
+      fclose(Archivo);
+      printf("Se ha codificado con exito\n");
+    }else
+      printf("Hay uno o mas caracteres del archivo que no se encuentran en la lista\n");
   }
 }
 void decodificar(TipoLista* Raiz, char linea[], char decodificado[], TipoLista* Raiz2){
@@ -459,4 +463,27 @@ void decodificar(TipoLista* Raiz, char linea[], char decodificado[], TipoLista* 
         decodificar(Raiz, linea, decodificado+1, Raiz2);
       }
     }
+}
+int validarCodificacion(TipoLista* Inicio, char nombre[]){
+  FILE* Archivo = fopen(nombre, "rb");
+  TipoLista* temp = Inicio;
+  char linea[200];
+  int i = 0, flag = 0, error = 0;
+  fgets(linea, 200, Archivo);
+  linea[strlen(linea)-1] = '\0';
+  while(linea[i] != '\0' && error == 0){
+    temp = Inicio;
+    flag = 0;
+    while(temp != NULL && flag == 0){
+      if(temp->tipo == 0 && temp->simbolo == linea[i]){
+        flag = 1;
+      }
+      temp = temp->sig;
+    }
+    if(flag == 0)
+      error = 1;
+    i++;
+  }
+  fclose(Archivo);
+  return error;
 }
